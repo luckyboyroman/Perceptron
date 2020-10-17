@@ -191,6 +191,6 @@ int main() {
 	hi.forward_feed();
 
 	hi.Show(size);
-	delete[] results, input_data;
+	delete[] results,size, input_data;
 	return 0;
 }
