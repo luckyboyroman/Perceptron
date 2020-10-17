@@ -56,7 +56,7 @@ public:
 			cout << endl;
 		}
 	}
-	void Show(int *p) {
+	void Show() {
 		cout << "Shows neurons.values" << endl;
 		for (int i = 0; i < n; i++) {
 			cout << "Sloi" << i << endl;
@@ -136,7 +136,7 @@ int main() {
 	input_data[0] = 0.0;
 	input_data[1] = 0.0;
 	hi.SetInput(input_data);
-	hi.Show(size);
+	hi.Show();
 	hi.ShowWeights(size);
 	hi.forward_feed();
 	for (int i = 0; i < 150000; i++) {
@@ -145,7 +145,7 @@ int main() {
 		hi.forward_feed();
 	}
 	cout << "Iputs_data  \t    0 0" << endl;
-	hi.Show(size);
+	hi.Show();
 	hi.NeuronsCleaned();
 	input_data[0] = 0.0;
 	input_data[1] = 1.0;
@@ -157,7 +157,7 @@ int main() {
 		hi.forward_feed();
 	}
 	cout << "Iputs_data  \t  0 1" << endl;
-	hi.Show(size);
+	hi.Show();
 	hi.NeuronsCleaned();
 	input_data[0] = 1.0;
 	input_data[1] = 0.0;
@@ -169,7 +169,7 @@ int main() {
 		hi.forward_feed();
 	}
 	cout << "Iputs_data  \t  1 0" << endl;
-	hi.Show(size);
+	hi.Show();
 	hi.NeuronsCleaned();
 	input_data[0] = 1.0;
 	input_data[1] = 1.0;
@@ -181,14 +181,14 @@ int main() {
 		hi.forward_feed();
 	}
 	cout << "Iputs_data  \t 1 1" << endl << endl;
-	hi.Show(size);
+	hi.Show();
 	hi.NeuronsCleaned();
 	input_data[0] = 1.0;
 	input_data[1] = 0.0;
 	hi.SetInput(input_data);
 	hi.forward_feed();
 
-	hi.Show(size);
+	hi.Show();
 	delete[] results,size, input_data;
 	return 0;
 }
