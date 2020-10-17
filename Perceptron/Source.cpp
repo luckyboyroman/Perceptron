@@ -163,7 +163,6 @@ int main() {
 	hi.NeuronsCleaned();
 	input_data[0] = 1.0;
 	input_data[1] = 0.0;
-	hi.NeuronsCleaned();
 	hi.SetInput(input_data);
 	hi.forward_feed();
 	for (int i = 0; i < 150000; i++) {
@@ -192,5 +191,6 @@ int main() {
 	hi.forward_feed();
 
 	hi.Show(size);
+	delete[] results, input_data;
 	return 0;
 }
