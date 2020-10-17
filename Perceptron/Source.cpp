@@ -57,7 +57,7 @@ public:
 	void NeuronsCleaned() {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < size[i]; j++) {
-				neurons[i][j].value = 0;
+				neurons[i][j].value = 0.0;
 			}
 		}
 	}
@@ -128,22 +128,69 @@ int main() {
 	int const n = 4;
 	int* size = new int[n];
 	double* results = new double[n];
-	size[0] = 1;
+	size[0] = 2;
 	size[1] = 3;
 	size[2] = 3;
 	size[3] = 1;
 	double* input_data = new double[size[0]];
-	input_data[0] = 1.0;
 	hi.SetLayers(n,size);
 	hi.NeuronsCleaned();
+	input_data[0] = 0.0;
+	input_data[1] = 0.0;
 	hi.SetInput(input_data);
 	hi.Show(size);
 	hi.ShowWeights(size);
+	hi.forward_feed();
+	for (int i = 0; i < 150000; i++) {
+		hi.BackPropogation(1.0);
+		hi.WeightsUpdater(0.1);
+		hi.forward_feed();
+	}
+	cout << "Iputs_data  \t    0 0" << endl;
+	hi.Show(size);
+	hi.NeuronsCleaned();
+	input_data[0] = 0.0;
+	input_data[1] = 1.0;
+	hi.SetInput(input_data);
 	hi.forward_feed();
 	for (int i = 0; i < 150000; i++) {
 		hi.BackPropogation(0.0);
 		hi.WeightsUpdater(0.1);
 		hi.forward_feed();
 	}
+	cout << "Iputs_data  \t  0 1" << endl;
 	hi.Show(size);
+	hi.NeuronsCleaned();
+	input_data[0] = 1.0;
+	input_data[1] = 0.0;
+	hi.NeuronsCleaned();
+	hi.SetInput(input_data);
+	hi.forward_feed();
+	for (int i = 0; i < 150000; i++) {
+		hi.BackPropogation(0.0);
+		hi.WeightsUpdater(0.1);
+		hi.forward_feed();
+	}
+	cout << "Iputs_data  \t  1 0" << endl;
+	hi.Show(size);
+	hi.NeuronsCleaned();
+	input_data[0] = 1.0;
+	input_data[1] = 1.0;
+	hi.SetInput(input_data);
+	hi.forward_feed();
+	for (int i = 0; i < 150000; i++) {
+		hi.BackPropogation(1.0);
+		hi.WeightsUpdater(0.1);
+		hi.forward_feed();
+	}
+	cout << "Iputs_data  \t 1 1" << endl << endl;
+	hi.Show(size);
+	hi.NeuronsCleaned();
+	input_data[0] = 1.0;
+	input_data[1] = 0.0;
+	hi.SetInput(input_data);
+	hi.forward_feed();
+
+	hi.Show(size);
+	return 0;
 }
