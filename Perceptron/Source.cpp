@@ -24,19 +24,19 @@ public:
 		double res = x * (1 - x);
 		return res;
 	}
-	void SetLayers(int n,int *p) {
+	void SetLayers(int n,int *size) {
 		this->n = n;
 		neurons = new neuron * [n];
-		size = new int[n];
+		this->size = new int[n];
 		weights = new double** [n - 1];
 		for (int i = 0; i < n; i++) {
-			neurons[i] = new neuron[p[i]];
-			size[i] = p[i];
+			neurons[i] = new neuron[size[i]];
+			this->size[i] = size[i];
 			if (i < n - 1) {
-				weights[i] = new double* [p[i]];
-				for (int j = 0; j < p[i]; j++) {
-					weights[i][j] = new double[p[i + 1]];
-					for (int k = 0; k < p[i + 1]; k++) {
+				weights[i] = new double* [size[i]];
+				for (int j = 0; j < size[i]; j++) {
+					weights[i][j] = new double[size[i + 1]];
+					for (int k = 0; k < size[i + 1]; k++) {
 						weights[i][j][k] = (rand() % 70) / 70.0;
 					}
 				}
