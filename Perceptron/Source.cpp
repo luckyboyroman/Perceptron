@@ -43,12 +43,12 @@ public:
 			}
 		}
 	}
-	void ShowWeights(int* p) {
+	void ShowWeights() {
 		cout << "Shows weights" << endl;
 		for (int i = 0; i < n - 1; i++) {
 			cout << "Layer:" << i << endl;
-			for (int j = 0; j < p[i]; j++) {
-				for (int k = 0; k < p[i + 1]; k++) {
+			for (int j = 0; j < size[i]; j++) {
+				for (int k = 0; k < size[i + 1]; k++) {
 					cout << "weights[" << i << "]" << "[" << j << "]" << "[" << k << "]\t" << weights[i][j][k] << " ";
 				}
 				cout << endl;
@@ -137,7 +137,7 @@ int main() {
 	input_data[1] = 0.0;
 	hi.SetInput(input_data);
 	hi.Show();
-	hi.ShowWeights(size);
+	hi.ShowWeights();
 	hi.forward_feed();
 	for (int i = 0; i < 150000; i++) {
 		hi.BackPropogation(1.0);
