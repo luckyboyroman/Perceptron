@@ -43,7 +43,19 @@ public:
 			}
 		}
 	}
-	void ShowWeights(int* p);
+	void ShowWeights(int* p) {
+		cout << "Shows weights" << endl;
+		for (int i = 0; i < n - 1; i++) {
+			cout << "Layer:" << i << endl;
+			for (int j = 0; j < p[i]; j++) {
+				for (int k = 0; k < p[i + 1]; k++) {
+					cout << "weights[" << i << "]" << "[" << j << "]" << "[" << k << "]\t" << weights[i][j][k] << " ";
+				}
+				cout << endl;
+			}
+			cout << endl;
+		}
+	}
 	void Show(int *p) {
 		cout << "Shows neurons.values" << endl;
 		for (int i = 0; i < n; i++) {
@@ -108,20 +120,6 @@ public:
 		}
 	}
 	};
-/*Определения ф-ций*/
-void network::ShowWeights(int* p){
-	cout << "Shows weights" << endl;
-	for (int i = 0; i < n - 1; i++) {
-		cout << "Layer:" << i << endl;
-		for (int j = 0; j < p[i]; j++) {
-			for (int k = 0; k < p[i + 1]; k++) {
-				cout  <<"weights[" << i << "]" << "[" << j << "]" << "[" << k << "]\t" << weights[i][j][k] << " ";
-			}
-			cout << endl;
-		}
-		cout << endl;
-	}
-}
 
 int main() {
 	network hi;
