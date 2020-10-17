@@ -37,7 +37,7 @@ public:
 				for (int j = 0; j < p[i]; j++) {
 					weights[i][j] = new double[p[i + 1]];
 					for (int k = 0; k < p[i + 1]; k++) {
-						weights[i][j][k] = (rand() % 70) / 50.0;
+						weights[i][j][k] = (rand() % 70) / 70.0;
 					}
 				}
 			}
@@ -72,7 +72,17 @@ public:
 				for (int j = 0; j < size[k - 1]; j++) {
 					neurons[k][i].value += neurons[k - 1][j].value * weights[k - 1][j][i];
 				}
-				neurons[k][i].act();
+					neurons[k][i].act();
+
+			}
+		}
+	}
+	void ShowsResults() {
+		for (int k = 1; k < n; k++) {
+			for (int i = 0; i < size[k]; i++) {
+				for (int j = 0; j < size[k - 1]; j++) {
+					neurons[k][i].value += neurons[k - 1][j].value * weights[k - 1][j][i];
+				}
 			}
 		}
 	}
@@ -89,7 +99,6 @@ public:
 		}
 	}
 	void WeightsUpdater(double lr) {
-		/*LayerNum=0*/
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = 0; j < size[i]; j++) {
 				for (int k = 0; k < size[i + 1]; k++) {
@@ -131,9 +140,9 @@ int main() {
 	hi.Show(size);
 	hi.ShowWeights(size);
 	hi.forward_feed();
-	for (int i = 0; i < 5000; i++) {
-		hi.BackPropogation(50.0);
-		hi.WeightsUpdater(0.5);
+	for (int i = 0; i < 150000; i++) {
+		hi.BackPropogation(0.0);
+		hi.WeightsUpdater(0.1);
 		hi.forward_feed();
 	}
 	hi.Show(size);
