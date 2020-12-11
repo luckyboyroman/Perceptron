@@ -1,15 +1,17 @@
 #include "NetWork.h"
 using namespace std;
 int n,k;
-double tmp = 3.14;
 vector <double> answers;
 vector<vector<double>> input_data;
-map <vector <double>, double> myMap;
 
 void ReadInputData(int *&size) {
 	ifstream fin;
 	string str;
-	fin.open("Input_1.txt");
+	fin.open("input__.txt");
+	if (!fin.is_open()) {
+		cout << "Error reading the file";
+		system("pause");
+	}
 	while (!fin.eof()) {
 		fin >> str;
 		if (str == "NetWork") fin >> n;
@@ -19,45 +21,40 @@ void ReadInputData(int *&size) {
 				fin >> size[i];
 			}
 		}
-		if (str == "Answers") {
+		if (str == "Inputs") {
 			fin >> k;
-			answers.resize(k);
-			for (int i = 0; i < k; i++) {
-				fin >> answers[i];
-			}
-		}
-
-		if (str == "Input") {
 			input_data.resize(k);
-			for (int i = 0; i < k; i++) {
+			answers.resize(k);
+			for (int i = 0; i < k; ++i) {
 				input_data[i].resize(size[0]);
 			}
-			for (int i = 0; i < k; i++) {
+			for (int i = 0; i < k; ++i) {
 				for (int j = 0; j < size[0]; j++) {
 					fin >> input_data[i][j];
 				}
+				fin >> answers[i];
 			}
 		}
 	}
 	fin.close();
 }
-void Transform(int *&size) {
-	for (int i = 0; i < k; i++) {
-		answers[i] += tmp;
-		answers[i] /= 2*tmp;
+void Transform(int* size) {
+	for (int i = 0; i < k; ++i) {
+		if (fabs(answers[i] < 1e-4)) answers[i] = 0.0;
+		answers[i] += M_PI;
+		answers[i] /= 2 * M_PI;
 	}
-	for (int i = 0; i < k; i++) {
+	for (int i = 0; i < k; ++i) {
 		for (int j = 0; j < size[0]; j++) {
-			input_data[i][j] += tmp;
-			input_data[i][j] /= 2*tmp;
+			input_data[i][j] += M_PI;
+			input_data[i][j] /= 2 * M_PI;
 		}
 	}
 }
-
 int main() {
 	int* size;
 	NetWork hi;
-	thread t2;
+	int epoch = 0;
 	ReadInputData(size);
 	Transform(size);
 	hi.SetLayers(n, size);
@@ -73,15 +70,16 @@ int main() {
 		double result;
 		do {
 			error = 0.0;
-			for (int i = 0; i < k; i++) {
+			for (int i = 0; i < k; ++i) {
 				hi.SetInput(input_data[i]);
 				result = hi.forward_feed();
-				error += fabs(result - answers[i])/answers.size();
+				error += fabs(result - answers[i]);
 				if (result != answers[i]) {
 					hi.BackPropogation(answers[i]);
 					hi.WeightsUpdater(0.05);
 				}
 			}
+			epoch++;
 		} while (error > eps);
 		hi.SaveWeights();
 	}
@@ -90,19 +88,26 @@ int main() {
 	}
 	end = clock();
 	t = end - begin;
-	cout << "TIME= " << t << endl;
-	input_data[0] = { 0.287, 0.18, 0.227 };
+	cout << "TIMEWORK= " << t << endl;
+	input_data[0] = { 0.033, 0.661, 0.136 };
 
-	for (int i = 0; i < size[0]; i++) {
-		input_data[0][i] += tmp;
-		input_data[0][i] /= 2*tmp;
+	for (int i = 0; i < size[0]; ++i) {
+		input_data[0][i] += M_PI;
+		input_data[0][i] /= 2* M_PI;
 	}
 
 	hi.SetInput(input_data[0]);
-	double hell;
-	hell= hi.forward_feed();
-	hell *= tmp * 2;
-	hell -= tmp;
-	cout << hell;
+	double result;
+	result= hi.forward_feed();
+	result *= M_PI * 2;
+	result -= M_PI;
+	if (study) cout << "epoch=" << epoch << endl;
+	printf("result= %.5f", result);
+	answers.clear();
+	for (int i = 0; i < k; ++i) {
+		input_data[i].clear();
+	}
+	input_data.clear();
+	delete[]size;
 	return 0;
 }
