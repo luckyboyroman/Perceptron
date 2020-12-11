@@ -12,15 +12,15 @@ void NetWork::SetLayers(int n, int* size) {
 	neurons = new neuron * [n];
 	this->size = new int[n];
 	weights = new double** [n - 1];
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		neurons[i] = new neuron[size[i]];
 		this->size[i] = size[i];
 		if (i < n - 1) {
 			weights[i] = new double* [size[i]];
-			for (int j = 0; j < size[i]; j++) {
+			for (int j = 0; j < size[i]; ++j) {
 				weights[i][j] = new double[size[i + 1]];
-				for (int k = 0; k < size[i + 1]; k++) {
-					weights[i][j][k] = (rand() % 70) / 90.0;
+				for (int k = 0; k < size[i + 1]; ++k) {
+					weights[i][j][k] = (rand() % 60) / 90.0;
 				}
 			}
 		}
@@ -28,10 +28,10 @@ void NetWork::SetLayers(int n, int* size) {
 }
 void NetWork::ShowWeights() {
 	cout << "Shows weights" << endl;
-	for (int i = 0; i < n - 1; i++) {
+	for (int i = 0; i < n - 1; ++i) {
 		cout << "Layer:" << i << endl;
-		for (int j = 0; j < size[i]; j++) {
-			for (int k = 0; k < size[i + 1]; k++) {
+		for (int j = 0; j < size[i]; ++j) {
+			for (int k = 0; k < size[i + 1]; ++k) {
 				cout << "weights[" << i << "]" << "[" << j << "]" << "[" << k << "]\t" << weights[i][j][k] << " ";
 			}
 			cout << endl;
@@ -41,11 +41,15 @@ void NetWork::ShowWeights() {
 }
 void NetWork::SaveWeights() {
 	ofstream f_out;
-	f_out.open("Results.txt");
-	for (int i = 0; i < n - 1; i++) {
-		for (int j = 0; j < size[i]; j++) {
-			for (int k = 0; k < size[i + 1]; k++) {
-				f_out  << "weights[" << i << "]" << "[" << j << "]" << "[" << k << "]\t" << weights[i][j][k] << " ";
+	f_out.open("Weights.txt");
+	if (!f_out.is_open()) {
+		cout << "Error reading the file";
+		system("pause");
+	}
+	for (int i = 0; i < n - 1; ++i) {
+		for (int j = 0; j < size[i]; ++j) {
+			for (int k = 0; k < size[i + 1]; ++k) {
+				f_out  << weights[i][j][k] << " " ;
 			}
 		}
 	}
@@ -61,19 +65,19 @@ void NetWork::Show() {
 		cout << endl;
 	}
 }
-void NetWork::SetInput(double* values) {
+void NetWork::SetInput(const vector<double> &values) {
 	for (int i = 0; i < size[0]; i++) {
 		neurons[0][i].value = values[i];
 	}
 }
 double NetWork::forward_feed() {
-	for (int k = 1; k < n; k++) {
-		for (int i = 0; i < size[k]; i++) {
+	for (int k = 1; k < n; ++k) {
+		for (int i = 0; i < size[k]; ++i) {
 			double sum = 0.0;
-			for (int j = 0; j < size[k - 1]; j++) {
+			for (int j = 0; j < size[k - 1]; ++j) {
 				sum += neurons[k - 1][j].value * weights[k - 1][j][i];
 			}
-			neurons[k][i].value = sum;
+			neurons[k][i].value = sum; //+ShiftWeights[k][i]
 			neurons[k][i].act();
 		}
 	}
@@ -81,10 +85,10 @@ double NetWork::forward_feed() {
 }
 void NetWork::BackPropogation(double expect) {
 	neurons[n - 1][0].error = expect - neurons[n - 1][0].value;
-	for (int i = n - 2; i > 0; i--) {
-		for (int j = 0; j < size[i]; j++) {
+	for (int i = n - 2; i > 0; --i) {
+		for (int j = 0; j < size[i]; ++j) {
 			double error = 0.0;
-			for (int k = 0; k < size[i + 1]; k++) {
+			for (int k = 0; k < size[i + 1]; ++k) {
 				error += neurons[i + 1][k].error * weights[i][j][k];
 			}
 			neurons[i][j].error = error;
@@ -92,23 +96,44 @@ void NetWork::BackPropogation(double expect) {
 	}
 }
 void NetWork::WeightsUpdater(double lr) {
-	for (int i = 0; i < n - 1; i++) {
-		for (int j = 0; j < size[i]; j++) {
-			for (int k = 0; k < size[i + 1]; k++) {
+	for (int i = 0; i < n - 1; ++i) {
+		for (int j = 0; j < size[i]; ++j) {
+			for (int k = 0; k < size[i + 1]; ++k) {
 				weights[i][j][k] += neurons[i + 1][k].error * sigm_pro(neurons[i + 1][k].value) * neurons[i][j].value * lr;
 			}
 		}
 	}
+
 }
-void NetWork::UploadWeights() {
+void NetWork::ReadWeights() {
 	fstream f_in;
-	f_in.open("Results.txt");
-	for (int i = 0; i < n - 1; i++) {
-		for (int j = 0; j < size[i]; j++) {
-			for (int k = 0; k < size[i + 1]; k++) {
+	f_in.open("Weights.txt");
+	if (!f_in.is_open()) {
+		cout << "Error reading the file";
+		system("pause");
+	}
+	for (int i = 0; i < n - 1; ++i) {
+		for (int j = 0; j < size[i]; ++j) {
+			for (int k = 0; k < size[i + 1]; ++k) {
 				f_in >> weights[i][j][k];
 			}
 		}
 	}
 	f_in.close();
+}
+NetWork::~NetWork() {
+	for (int i = 0; i < n-1; ++i) {
+		for (int j = 0; j < size[i]; ++j) {
+				delete[] weights[i][j];
+		}
+	}
+	for (int i = 0; i < n - 1; ++i) {
+		delete[] weights[i];
+	}
+	delete[]weights;
+	for (int i = 0; i < n; ++i) {
+		delete[] neurons[i];
+	}
+	delete[] neurons;
+	delete[]size;
 }
