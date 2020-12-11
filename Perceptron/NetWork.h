@@ -1,9 +1,9 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <time.h>
 #include <random>
 #include <fstream>
-#include <cmath>
 #include <iostream>
 using namespace std;
 struct neuron {
@@ -23,13 +23,13 @@ public:
 	double*** weights;
 	double sigm_pro(double x);
 	void SetLayers(int n, int* size);
-	void ShowWeights();
 	void SaveWeights();
-	void UploadWeights();
+	void ReadWeights();
 	void Show();
-	void SetInput(double* values);
+	void ShowWeights();
+	void SetInput(const vector<double>& values);
 	double forward_feed();
 	void BackPropogation(double expect);
 	void WeightsUpdater(double lr);
+	~NetWork();
 };
-
